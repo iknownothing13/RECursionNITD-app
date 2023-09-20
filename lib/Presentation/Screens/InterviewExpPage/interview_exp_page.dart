@@ -10,12 +10,12 @@ class InterviewExpPage extends StatefulWidget {
 class _InterviewExpPageState extends State<InterviewExpPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
           body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "RECursion IE Page",
               style: TextStyle(fontSize: 30),

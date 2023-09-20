@@ -10,11 +10,11 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
           body: SingleChildScrollView(
         child: Column(
-          children: const [
+          children: [
             Text(
               "RECursion Event Page",
               style: TextStyle(fontSize: 30),

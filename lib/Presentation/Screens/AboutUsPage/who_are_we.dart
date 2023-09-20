@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});
@@ -12,11 +10,11 @@ class InfoPage extends StatefulWidget {
 class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
           body: SingleChildScrollView(
         child: Column(
-          children: const [
+          children: [
             Text(
               "RECursion AboutUs Page",
               style: TextStyle(fontSize: 30),
