@@ -1,8 +1,7 @@
-// lib/presentation/screens/data_display_screen.dart
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
+import '../../../Application/api_interaction/about_us_api_use_case.dart';
+import '../../../Domain/Model/about_us_model.dart';
 
 class AboutUsPage extends StatefulWidget {
   final FetchDataUseCase fetchDataUseCase;
@@ -35,18 +34,37 @@ class _AboutUsPageState extends State<AboutUsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: SingleChildScrollView(
-        child: Column(
-          children: const [
-            Text(
-              "RECursion AboutUs Page",
-              style: TextStyle(fontSize: 30),
-            ),
-          ],
-        ),
-      )),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('About Us'),
+      ),
+      body: FutureBuilder<AboutUs?>(
+        future: _dataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (snapshot.hasData) {
+            final data = snapshot.data!;
+            // Build your UI using the 'data' variable
+            // final aboutUs = snapshot.data!;
+            return ListTile(
+              title: Text(
+                  'Years of Experience: ${data.yearsOfExperience ?? 'N/A'}'),
+              trailing: Text('Contest Count: ${data.contestCount ?? 'N/A'}'),
+              subtitle: Text('Hours Teaching: ${data.hoursTeaching ?? 'N/A'}'),
+            );
+          } else {
+            // Handle other cases, e.g., when there is no data
+            return const Center(
+              child: Text('No data available.'),
+            );
+          }
+        },
+      ),
     );
   }
 }
