@@ -1,21 +1,21 @@
 // lib/presentation/screens/data_display_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
+import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
 
-import '../../../Domain/Model/events_model.dart';
+import '../../../Domain/Model/team_model.dart';
 
-class EventPageScreen extends StatefulWidget {
-  final FetchDataUseCaseEvent fetchDataUseCase;
+class TeamPageScreen extends StatefulWidget {
+  final FetchDataUseCaseTeam fetchDataUseCase;
 
-  const EventPageScreen({super.key, required this.fetchDataUseCase});
+  const TeamPageScreen({super.key, required this.fetchDataUseCase});
 
   @override
-  _EventPageScreenState createState() => _EventPageScreenState();
+  _TeamPageScreenState createState() => _TeamPageScreenState();
 }
 
-class _EventPageScreenState extends State<EventPageScreen> {
-  late Future<List<Event?>> _dataFuture;
+class _TeamPageScreenState extends State<TeamPageScreen> {
+  late Future<List<Team?>> _dataFuture;
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
     _dataFuture = fetchData();
   }
 
-  Future<List<Event?>> fetchData() async {
+  Future<List<Team?>> fetchData() async {
     try {
       final data = await widget.fetchDataUseCase.execute();
       return data;
@@ -38,9 +38,9 @@ class _EventPageScreenState extends State<EventPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Page'),
+        title: const Text('Our Team'),
       ),
-      body: FutureBuilder<List<Event?>>(
+      body: FutureBuilder<List<Team?>>(
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,14 +51,25 @@ class _EventPageScreenState extends State<EventPageScreen> {
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
-            // print("hello");
             // Build your UI using the 'data' variable
-            // final aboutUs = snapshot.data!;
             return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return const ListTile(
-                    title: Text("Event Name : }"),
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius:
+                          25.0, // Set the radius to control the size of the circular photo
+                      backgroundImage: NetworkImage(
+                        data[index]!
+                            .image!
+                            .toString(), // Replace with your image URL
+                      ),
+                    ),
+                    title: Text('Name : ${data[index]!.name!.toString()}'),
+                    trailing:
+                        Text("Year : ${data[index]!.batchYear!.toString()}"),
+                    subtitle: Text(
+                        "Phone Number : ${data[index]!.mobile!.toString()}"),
                   );
                 });
           } else {

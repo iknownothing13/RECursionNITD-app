@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:recursion/Presentation/Routes/app_routes.dart';
-import 'package:recursion/Presentation/Screens/EventsPage/events_page.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
 import 'package:recursion/Presentation/Screens/InterviewExpPage/interview_exp_page.dart';
 
@@ -22,11 +21,11 @@ class AppRouter {
           settings: settings,
         );
 
-      case AppRoutes.events:
-        return MaterialPageRoute<dynamic>(
-          builder: (_) => const EventPage(),
-          settings: settings,
-        );
+      // case AppRoutes.events:
+      //   return MaterialPageRoute<dynamic>(
+      //     builder: (_) => const EventPageScreen(),
+      //     settings: settings,
+      //   );
 
       case AppRoutes.interviewExperience:
         return MaterialPageRoute<dynamic>(
