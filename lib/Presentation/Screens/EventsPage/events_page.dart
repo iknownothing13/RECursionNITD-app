@@ -15,7 +15,7 @@ class EventPageScreen extends StatefulWidget {
 }
 
 class _EventPageScreenState extends State<EventPageScreen> {
-  late Future<List<Event?>> _dataFuture;
+  late Future<List<Results?>> _dataFuture;
 
   @override
   void initState() {
@@ -23,10 +23,12 @@ class _EventPageScreenState extends State<EventPageScreen> {
     _dataFuture = fetchData();
   }
 
-  Future<List<Event?>> fetchData() async {
+  Future<List<Results?>> fetchData() async {
     try {
       final data = await widget.fetchDataUseCase.execute();
+      print(data.elementAt(1));
       return data;
+ 
     } catch (e) {
       // Handle errors gracefully
       print('Error fetching data: $e');
@@ -40,7 +42,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
       appBar: AppBar(
         title: const Text('Event Page'),
       ),
-      body: FutureBuilder<List<Event?>>(
+      body: FutureBuilder<List<Results?>>(
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -57,8 +59,35 @@ class _EventPageScreenState extends State<EventPageScreen> {
             return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return const ListTile(
-                    title: Text("Event Name : }"),
+                  return  ListTile(
+                    onTap: () {
+                      
+                    },
+                    title: Text(
+                      " ${data.elementAtOrNull(index)?.title }",
+                      style : TextStyle(
+                        fontSize: 20,
+                        letterSpacing: 1,
+
+                      ),
+                      ),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage('${data.elementAtOrNull(index)?.image}'),
+                    ),
+                    trailing: Column(
+                      children: <Widget>[
+                        Text(
+                          ' ${data.elementAtOrNull(index)?.eventType}'
+                        ),
+                        Text(
+                          'Venue: ${data.elementAtOrNull(index)?.venue}',
+                        ),
+                      ],
+                    ),
+
+                    
+                    
+                  
                   );
                 });
           } else {

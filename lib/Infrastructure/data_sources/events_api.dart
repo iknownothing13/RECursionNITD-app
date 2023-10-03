@@ -6,21 +6,27 @@ import '../../Domain/Model/events_model.dart';
 
 
 class EventApi {
-  final String baseUrl;
+  String baseUrl;
   EventApi(this.baseUrl);
 
-  Future<List<Event?>> fetchData() async {
+  Future<List<Results?>> fetchData() async {
     // ignore: unnecessary_string_interpolations
-    final Uri uri = Uri.parse('$baseUrl');
-    List<Event?> post = [];
+    baseUrl = 'https://recnitdgp.pythonanywhere.com/api/events/';
+    final Uri uri = Uri.parse(baseUrl);
+    List<Results?> post = [];
+  
     try {
       final response = await http.get(uri);
+    
       if (response.statusCode == 200) {
-        var data = json.decode(response.body.toString());
+        
+        var data = jsonDecode(response.body.toString());
+        //print(data);
         post.clear();
-        for (Map<String, dynamic> i in data) {
-          post.add(Event.fromJson(i));
+        for (Map<String, dynamic> i in data['results']) {
+          post.add(Results.fromJson(i));
         }
+        //print(post);
         return post;
       } else {
         throw ApiError(
