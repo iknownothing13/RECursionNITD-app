@@ -9,7 +9,7 @@ class FetchDataUseCaseEvent {
 
   FetchDataUseCaseEvent(this.remoteApi);
 
-  Future<List<Event?>> execute() async {
+  Future<List<Results?>> execute() async {
     return remoteApi.fetchData();
   }
 }
