@@ -26,7 +26,6 @@ class _EventPageScreenState extends State<EventPageScreen> {
   Future<List<Results?>> fetchData() async {
     try {
       final data = await widget.fetchDataUseCase.execute();
-      print(data.elementAt(1));
       return data;
  
     } catch (e) {
@@ -39,8 +38,10 @@ class _EventPageScreenState extends State<EventPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[800],
       appBar: AppBar(
         title: const Text('Event Page'),
+        backgroundColor: Colors.grey[900],
       ),
       body: FutureBuilder<List<Results?>>(
         future: _dataFuture,
@@ -53,43 +54,99 @@ class _EventPageScreenState extends State<EventPageScreen> {
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
-            // print("hello");
+        
             // Build your UI using the 'data' variable
             // final aboutUs = snapshot.data!;
-            return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return  ListTile(
-                    onTap: () {
-                      
-                    },
-                    title: Text(
-                      " ${data.elementAtOrNull(index)?.title }",
-                      style : TextStyle(
-                        fontSize: 20,
-                        letterSpacing: 1,
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(10,30,10,0),
+              child: ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return  Card(
+                      color: Colors.grey[700],
+                      child : Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 7, 4, 3),
+                        child: Container(
+                          child : Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage('${data.elementAtOrNull(index)?.image}'),
+                                  minRadius: 40.0,
+                                  
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(2,2,2,2),
+                                child: Column(
+                                 
+                                  children: <Widget>[
+                                    // title
+                         
+                                      Center(
+                                        child: Text(
+                                          '${data.elementAtOrNull(index)?.title}',
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            color: const Color.fromARGB(244, 255, 255, 255),
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Poppins',
+                                            fontStyle: FontStyle.normal,
+                                                            
+                                            
+                                          ),
+                                        ),
+                                      ),
+                                    SizedBox(height:4),
+                                    Row(
+                                      children: <Widget>[
+                                        // detail 1
+                                        Text(
+                                          '${data.elementAtOrNull(index)?.eventType}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 1,
+                                          ),
+                                        ),
+                                        // detail 2
+                                        SizedBox(width: 10,),
+                                        Text(
+                                          '${data.elementAtOrNull(index)?.venue}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.blueAccent,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 1,
 
-                      ),
-                      ),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage('${data.elementAtOrNull(index)?.image}'),
-                    ),
-                    trailing: Column(
-                      children: <Widget>[
-                        Text(
-                          ' ${data.elementAtOrNull(index)?.eventType}'
-                        ),
-                        Text(
-                          'Venue: ${data.elementAtOrNull(index)?.venue}',
-                        ),
-                      ],
-                    ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          '${data.elementAtOrNull(index)?.targetYear}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.amberAccent,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 1,
 
-                    
-                    
-                  
-                  );
-                });
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+            );
           } else {
             // Handle other cases, e.g., when there is no data
             return const Center(

@@ -21,12 +21,12 @@ class EventApi {
       if (response.statusCode == 200) {
         
         var data = jsonDecode(response.body.toString());
-        //print(data);
+
         post.clear();
         for (Map<String, dynamic> i in data['results']) {
           post.add(Results.fromJson(i));
         }
-        //print(post);
+  
         return post;
       } else {
         throw ApiError(

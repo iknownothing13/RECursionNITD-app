@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recursion/Presentation/Routes/app_routes.dart';
-import 'package:recursion/Presentation/Routes/routes.dart';
+import '../../Presentation/Routes/app_routes.dart';
+import '../../Presentation/Routes/routes.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
