@@ -91,7 +91,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -99,7 +99,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -107,7 +107,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -115,7 +115,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -123,7 +123,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -131,7 +131,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -139,7 +139,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -147,7 +147,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -155,7 +155,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 ListTile(
@@ -163,7 +163,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   subtitle: Text('Tap to view the material'),//data.notifications?.location ?? 'N/A'),
                   trailing: Text(' 30-02-2003\n18:00 - 20:00'),
                   onTap: () async{
-                    launchUrlStart(url: 'https://www.recursionnitd.in/');
+                   launchUrlStart(url: 'https://www.recursionnitd.in/');
                     },//data.notifications?.time ?? 'N/A'),
                 ),
                 
