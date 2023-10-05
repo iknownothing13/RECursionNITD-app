@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../Domain/Model/team_model.dart';
 
@@ -11,6 +12,7 @@ class TeamPageScreen extends StatefulWidget {
   const TeamPageScreen({super.key, required this.fetchDataUseCase});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TeamPageScreenState createState() => _TeamPageScreenState();
 }
 
@@ -29,6 +31,7 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
       return data;
     } catch (e) {
       // Handle errors gracefully
+      // ignore: avoid_print
       print('Error fetching data: $e');
       return [];
     }
@@ -37,8 +40,10 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[800],
       appBar: AppBar(
-        title: const Text('Our Team'),
+        backgroundColor: Colors.grey[900],
+        title: const Text('Our Team',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize:30 ),),
       ),
       body: FutureBuilder<List<Team?>>(
         future: _dataFuture,
@@ -55,22 +60,39 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
             return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      radius:
-                          25.0, // Set the radius to control the size of the circular photo
-                      backgroundImage: NetworkImage(
-                        data[index]!
-                            .image!
-                            .toString(), // Replace with your image URL
+                  return Card(
+                    color:Colors.grey[700],
+                      child: Column(
+                    children: <Widget>[
+                      GestureDetector(
+                        //onTap: _launchURL(data[index]!.urlLinkedIn!.toString()),
+                        child: CircleAvatar(
+                          radius: 50.0,
+                          backgroundImage: NetworkImage(
+                            data[index]!.image!.toString(),
+                          ),
+                        ),
                       ),
-                    ),
-                    title: Text('Name : ${data[index]!.name!.toString()}'),
-                    trailing:
-                        Text("Year : ${data[index]!.batchYear!.toString()}"),
-                    subtitle: Text(
-                        "Phone Number : ${data[index]!.mobile!.toString()}"),
-                  );
+                      const SizedBox(width: 10),
+                      Column(
+                        children: <Widget>[
+                          Text('Name : ${data[index]!.name!.toString()}',style: TextStyle(color: Colors.white),),
+                          const SizedBox(height:2.5),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                  "Year : ${data[index]!.batchYear!.toString()}",style: TextStyle(color: Colors.white)),
+                              const SizedBox(width: 10),
+                              Text(
+                                  "Phone Number : ${data[index]!.mobile!.toString()}",style: TextStyle(color: Colors.white)),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ));
                 });
           } else {
             // Handle other cases, e.g., when there is no data
@@ -81,5 +103,13 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
         },
       ),
     );
+  }
+}
+
+_launchURL(text) async {
+  if (await canLaunch(text)) {
+    await launch(text);
+  } else {
+    throw 'Could not launch $text';
   }
 }
