@@ -40,7 +40,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[800],
       appBar: AppBar(
-        title: const Text('Event Page'),
+        title: const Text('Event Page',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.grey[900],
       ),
       body: FutureBuilder<List<Results?>>(
