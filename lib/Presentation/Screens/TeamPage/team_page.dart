@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
+import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../Domain/Model/team_model.dart';
@@ -37,19 +38,35 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
     }
   }
 
+  var height, width;
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.grey[800],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[900],
-        title: const Text('Our Team',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize:30 ),),
-      ),
+      backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.grey[900],
+      //   title: const Text(
+      //     'Our Team',
+      //     style: TextStyle(
+      //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
+      //   ),
+      // ),
       body: FutureBuilder<List<Team?>>(
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return Center(
+              child: SimpleCircularProgressBar(
+                progressColors: [Colors.orange, Colors.red],
+                backColor: Colors.black,
+                size: 100,
+                fullProgressColor: Colors.green,
+                animationDuration: 1,
+              ),
+            );
+            ;
           } else if (snapshot.hasError) {
             return Center(
               child: Text('Error: ${snapshot.error}'),
@@ -61,38 +78,43 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    color:Colors.grey[700],
+                      color: Colors.grey[700],
                       child: Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        //onTap: _launchURL(data[index]!.urlLinkedIn!.toString()),
-                        child: CircleAvatar(
-                          radius: 50.0,
-                          backgroundImage: NetworkImage(
-                            data[index]!.image!.toString(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
                         children: <Widget>[
-                          Text('Name : ${data[index]!.name!.toString()}',style: TextStyle(color: Colors.white),),
-                          const SizedBox(height:2.5),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          GestureDetector(
+                            //onTap: _launchURL(data[index]!.urlLinkedIn!.toString()),
+                            child: CircleAvatar(
+                              radius: 50.0,
+                              backgroundImage: NetworkImage(
+                                data[index]!.image!.toString(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
                             children: <Widget>[
                               Text(
-                                  "Year : ${data[index]!.batchYear!.toString()}",style: TextStyle(color: Colors.white)),
-                              const SizedBox(width: 10),
-                              Text(
-                                  "Phone Number : ${data[index]!.mobile!.toString()}",style: TextStyle(color: Colors.white)),
+                                'Name : ${data[index]!.name!.toString()}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              const SizedBox(height: 2.5),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                      "Year : ${data[index]!.batchYear!.toString()}",
+                                      style: TextStyle(color: Colors.white)),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                      "Phone Number : ${data[index]!.mobile!.toString()}",
+                                      style: TextStyle(color: Colors.white)),
+                                ],
+                              )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ));
+                      ));
                 });
           } else {
             // Handle other cases, e.g., when there is no data

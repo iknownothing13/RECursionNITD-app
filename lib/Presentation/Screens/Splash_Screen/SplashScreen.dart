@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  //generalize code for the Brackets part
+  //generalize code for the Brackets partzz
   TextSpan buildTextSpan(String t, double size, double optacity) {
     return TextSpan(
       text: t,
