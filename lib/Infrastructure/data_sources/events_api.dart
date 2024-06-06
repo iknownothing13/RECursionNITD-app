@@ -14,7 +14,6 @@ class EventApi {
     baseUrl = 'https://recnitdgp.pythonanywhere.com/api/events/';
     final Uri uri = Uri.parse(baseUrl);
     List<Results?> post = [];
-  
     try {
       final response = await http.get(uri);
     

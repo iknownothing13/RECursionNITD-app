@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:recursion/Presentation/Screens/AskREC/askREC.dart';
@@ -228,12 +229,8 @@ class _HomepageState extends State<Homepage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                Transition(
-                    child: routes[index],
-                    transitionEffect: TransitionEffect.FADE),
-              );
+              Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => routes[index]));
             },
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

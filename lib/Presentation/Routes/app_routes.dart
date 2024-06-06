@@ -10,5 +10,6 @@ class AppRoutes {
   static const String classes = '/classes';
   static const String event = '/event';
   static const String contest = '/contest';
-  
+  static const String login = '/login';
+
 }

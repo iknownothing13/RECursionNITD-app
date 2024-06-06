@@ -1,43 +1,16 @@
-// lib/presentation/screens/data_display_screen.dart
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluid_dialog/fluid_dialog.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter/material.dart';
 import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
 import '../../../Domain/Model/events_model.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
 
 class ContestPage extends StatefulWidget {
-  final FetchDataUseCaseEvent fetchDataUseCase;
-
-  const ContestPage({super.key, required this.fetchDataUseCase});
-
+  List<Results?> eventsData;
+  ContestPage({super.key, required this.eventsData});
   @override
   _ContestPageState createState() => _ContestPageState();
 }
 
 class _ContestPageState extends State<ContestPage> {
-  late Future<List<Results?>> _dataFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _dataFuture = fetchData();
-  }
-
-  Future<List<Results?>> fetchData() async {
-    try {
-      final data = await widget.fetchDataUseCase.execute();
-      return data;
-    } catch (e) {
-      // Handle errors gracefully
-      print('Error fetching data: $e');
-      return [];
-    }
-  }
-
   TextEditingController textController = TextEditingController();
 
   var height, width;
@@ -48,120 +21,75 @@ class _ContestPageState extends State<ContestPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder<List<Results?>>(
-        future: _dataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: SimpleCircularProgressBar(
-                progressColors: [Colors.orange, Colors.red],
-                backColor: Colors.black,
-                size: 100,
-                fullProgressColor: Colors.green,
-                animationDuration: 1,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (snapshot.hasData) {
-            final data = snapshot.data!;
-            final classesData =
-                data.where((event) => event?.eventType == 'Contest').toList();
-            // Build your UI using the 'data' variable
-            // final aboutUs = snapshot.data!;
-            return SingleChildScrollView(
-              //physics: BouncingScrollPhysics(),
-              child: Container(
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
+                  ),
+                  color: Color.fromRGBO(12, 12, 12, 1.0),
+                ),
+                height: height * 0.14,
+                width: width,
                 child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40),
-                        ),
-                        color: Color.fromRGBO(12, 12, 12, 1.0),
-                      ),
-                      height: height * 0.14,
-                      width: width,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 50,
-                                ),
-                                child: BackButton(
-                                  color: Colors.white,
-                                  style: ButtonStyle(
-                                    enableFeedback: true,
-                                    iconSize: WidgetStatePropertyAll(26),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 60, top: 50),
-                                child: Text(
-                                  "Contest Page",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            top: 50,
                           ),
-
-                          // Padding(
-                          //   padding: const EdgeInsets.only(left: 10, right: 15),
-                          //   child: AnimSearchBar(
-                          //     width: 370,
-                          //     textController: textController,
-                          //     onSuffixTap: () {
-                          //       setState(() {
-                          //         textController.clear();
-                          //       });
-                          //     },
-                          //     onSubmitted: (p0) {},
-                          //     helpText: "Search Events",
-                          //     closeSearchOnSuffixTap: false,
-                          //     prefixIcon: Icon(IconlyLight.search),
-                          //     style: TextStyle(
-                          //       fontFamily: 'Poppins',
-                          //     ),
-                          //     rtl: true,
-                          //     //autoFocus: true,
-                          //   ),
-                          // )
-                        ],
-                      ),
-                    ),
-                    if (classesData.isNotEmpty) classes(classesData),
-                    SizedBox(
-                      height: 15,
+                          child: BackButton(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 60, top: 50),
+                          child: Text(
+                            "Contest Page",
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            );
-          } else {
-            // Handle other cases, e.g., when there is no data
-            return const Center(
-              child: Text('No data available.'),
-            );
-          }
-        },
+              if (widget.eventsData != null)
+                events(widget.eventsData)
+              else
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      "No events available",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              SizedBox(
+                height: 15,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Container classes(List<Results?> classesData) {
+  Container events(List<Results?> eventsData) {
     return Container(
       child: Column(
         children: [
@@ -169,253 +97,263 @@ class _ContestPageState extends State<ContestPage> {
             margin: EdgeInsets.all(7),
             color: Colors.white,
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.9,
-                  mainAxisSpacing: 7,
-                  crossAxisSpacing: 7),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: classesData.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  color: Colors.black87,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 7, 4, 3),
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Image.network(
-                                height: 70,
-                                '${classesData.elementAtOrNull(index)?.image}'),
-                          ),
-                          // title
-                          Center(
-                            child: Text(
-                              '${classesData.elementAtOrNull(index)?.title}',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins',
-                                fontStyle: FontStyle.normal,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[
-                              // detail 1
-                              // Text(
-                              //   '${classesData.elementAtOrNull(index)?.eventType}',
-                              //   style: TextStyle(
-                              //     fontSize: 12,
-                              //     color: Colors.greenAccent,
-                              //     fontWeight: FontWeight.bold,
-                              //     letterSpacing: 1,
-                              //   ),
-                              // ),
-                              // detail 2
-
-                              Padding(
-                                padding: const EdgeInsets.only(left: 60),
-                                child: Text(
-                                  '${classesData.elementAtOrNull(index)?.venue}',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    mainAxisSpacing: 7,
+                    crossAxisSpacing: 7),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: eventsData.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.white,
+                    surfaceTintColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 7, 4, 3),
+                      child: Container(
+                        child: Column(
+                          children: <Widget>[
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  '${eventsData.elementAtOrNull(index)?.image}',
+                                  height: 97,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  color: Colors.white.withOpacity(0.9),
+                                  colorBlendMode: BlendMode.modulate,
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(width: 15),
-                          Text(
-                            '${classesData.elementAtOrNull(index)?.targetYear}',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.amberAccent,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
                             ),
-                          ),
-                          SizedBox(width: 15),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(242, 97, 63, 1.0),
-                                borderRadius: BorderRadius.circular(10)),
-                            padding: EdgeInsets.all(5),
-                            child: GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => FluidDialog(
-                                    rootPage: FluidDialogPage(
-                                        alignment: Alignment.center,
-                                        builder: (context) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                            height: height * 0.50,
-                                            width: width * 0.75,
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Image.network(
-                                                      height: 200,
-                                                      fit: BoxFit.fill,
-                                                      width: 200,
-                                                      '${classesData.elementAtOrNull(index)?.image}'),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Event Category  :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.eventType}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Open To  :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.targetYear}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Start Time  :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.startTime}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("End Time  :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.endTime}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Duration :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.duration}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Venue :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.venue}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text("Description  :  "),
-                                                    Text(
-                                                      '${classesData.elementAtOrNull(index)?.description}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          letterSpacing: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  color: Colors.black,
-                                                  child: TextButton(
-                                                    onPressed: () =>
-                                                        DialogNavigator.of(
-                                                                context)
-                                                            .close(),
-                                                    child: const Text(
-                                                      'Close',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                          // const SecondDialogPage(),
-                                        }),
-                                  ),
-                                );
-                              },
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Center(
                               child: Text(
-                                "Konw More",
+                                '${eventsData.elementAtOrNull(index)?.title}',
                                 style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
+                                  fontSize: 13,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Center(
+                              child: Text(
+                                '${eventsData.elementAtOrNull(index)?.venue}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Center(
+                              child: Text(
+                                '${eventsData.elementAtOrNull(index)?.targetYear}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(8, 28, 52, 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => FluidDialog(
+                                      rootPage: FluidDialogPage(
+                                          alignment: Alignment.center,
+                                          builder: (context) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0, 3),
+                                                  ),
+                                                ],
+                                              ),
+                                              padding: EdgeInsets.all(20),
+                                              height: height * 0.65,
+                                              width: width * 0.85,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Center(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.network(
+                                                          '${eventsData.elementAtOrNull(index)?.image}',
+                                                          height: 200,
+                                                          width: 200,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  for (var item in [
+                                                    [
+                                                      "Event Category",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.eventType
+                                                    ],
+                                                    [
+                                                      "Open To",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.targetYear
+                                                    ],
+                                                    [
+                                                      "Start Time",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.startTime
+                                                    ],
+                                                    [
+                                                      "End Time",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.endTime
+                                                    ],
+                                                    [
+                                                      "Duration",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.duration
+                                                    ],
+                                                    [
+                                                      "Venue",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.venue
+                                                    ],
+                                                    [
+                                                      "Description",
+                                                      eventsData
+                                                          .elementAtOrNull(
+                                                              index)
+                                                          ?.description
+                                                    ]
+                                                  ])
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 5.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            "${item[0]} : ",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              "${item[1]}",
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .blueAccent,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                letterSpacing:
+                                                                    1,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  Spacer(),
+                                                  Center(
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Colors.blueAccent,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
+                                                      child: TextButton(
+                                                        onPressed: () =>
+                                                            DialogNavigator.of(
+                                                                    context)
+                                                                .close(),
+                                                        child: const Text(
+                                                          'Close',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+
+                                            // const SecondDialogPage(),
+                                          }),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'View Details',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                }),
           ),
         ],
       ),
