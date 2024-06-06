@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:recursion/Presentation/Routes/app_routes.dart';
 
@@ -18,14 +17,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(
-          milliseconds: 1000), // this is the animation speed controller
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat(reverse: true);
-    // Navingating to the HomePage
+
+    // Navigate to the LoginPage after 2 seconds
     Timer(const Duration(milliseconds: 2000), () {
-      Navigator.of(context).pushReplacementNamed(AppRoutes
-          .home); // pushReplacement becuase this page will only be shown
+      Navigator.of(context).pushReplacementNamed(AppRoutes.login);
     });
   }
 
@@ -46,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              //  brackets with different sizes and different color opacity
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 RichText(
                   text: TextSpan(
@@ -61,7 +58,6 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
               ]),
-              // Spacer
               const SizedBox(height: 5),
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 RichText(
@@ -70,11 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
                   bodyTextSpan("ursion", 30),
                 ])),
               ]),
-
-              //adjusting gaph between RECursion and the loading bar
               const SizedBox(height: 20),
-
-              // Loading horizontal bar
               Container(
                 width: MediaQuery.of(context).size.width * 0.2,
                 color: Colors.grey[400],
@@ -84,10 +76,9 @@ class _SplashScreenState extends State<SplashScreen>
                     end: const Offset(1, 0),
                   ).animate(_controller),
                   child: Container(
-                    width: 10, // Adjust the width as needed
-                    height: 5, // Adjust the height as needed
-                    color: Colors.black, // Adjust the color as needed
-
+                    width: 10,
+                    height: 5,
+                    color: Colors.black,
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
@@ -99,7 +90,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  //generalize code for the Brackets partzz
   TextSpan buildTextSpan(String t, double size, double optacity) {
     return TextSpan(
       text: t,
@@ -113,7 +103,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  // generalize code for the "RECursion" wala part
   TextSpan bodyTextSpan(String t, double size) {
     return TextSpan(
       text: t,

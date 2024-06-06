@@ -4,14 +4,10 @@ import 'package:http/http.dart' as http;
 
 import '../../Domain/Model/about_us_model.dart';
 
-
 class AboutUsApi {
   final String baseUrl;
   AboutUsApi(this.baseUrl);
-  
-
-
-    Future<AboutUs?> fetchData() async {
+  Future<AboutUs?> fetchData() async {
     // ignore: unnecessary_string_interpolations
     final Uri uri = Uri.parse('$baseUrl');
 
@@ -31,6 +27,7 @@ class AboutUsApi {
     }
   }
 }
+
 class ApiError implements Exception {
   final String message;
 
