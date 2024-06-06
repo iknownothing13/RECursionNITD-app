@@ -8,6 +8,9 @@ import 'package:recursion/Infrastructure/data_sources/team_api.dart';
 import 'package:recursion/Presentation/Screens/HomePage/home_page.dart';
 import 'package:recursion/Presentation/Screens/EventsPage/events_page.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:recursion/Presentation/Screens/LoginPage/login.dart';
+import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
+import 'package:recursion/Presentation/Screens/LoginPage/welcome.dart';
 import 'package:recursion/Presentation/Screens/TeamPage/team_page.dart';
 import '../../../Application/api_interaction/about_us_api_use_case.dart';
 import '../../../Infrastructure/data_sources/Events_api.dart';
@@ -52,8 +55,8 @@ class _HomePageState extends State<HomePage> {
               return EventPageScreen(fetchDataUseCase: fetchDataUseCase2);
             case 2:
               return TeamPageScreen(fetchDataUseCase: fetchDataUseCase3);
-            // case 3:
-            //   return AskREC();
+            case 3:
+              return WelcomePage();
             default:
               return null; // Handle other cases if needed
           }
@@ -94,10 +97,10 @@ class _HomePageState extends State<HomePage> {
                   iconSize: 27,
                   textSize: 25,
                 ),
-                // GButton(
-                //   icon: Icons.pan_tool,
-                //   text: 'testing',
-                // ),
+                GButton(
+                  icon: Icons.pan_tool,
+                  text: 'testing',
+                ),
               ],
             ),
           ),
