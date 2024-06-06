@@ -1,5 +1,6 @@
 // lib/presentation/screens/data_display_screen.dart
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:recursion/Application/api_interaction/about_us_api_use_case.dart';
@@ -150,27 +151,30 @@ class _EventPageScreenState extends State<EventPageScreen> {
                                   fontSize: 18),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, right: 15),
-                            child: AnimSearchBar(
-                              width: 370,
-                              textController: textController,
-                              onSuffixTap: () {
-                                setState(() {
-                                  textController.clear();
-                                });
-                              },
-                              onSubmitted: (p0) {},
-                              helpText: "Search Events",
-                              closeSearchOnSuffixTap: false,
-                              prefixIcon: Icon(IconlyLight.search),
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                              ),
-                              rtl: true,
-                              //autoFocus: true,
-                            ),
-                          )
+                          // Padding(
+                          //   padding: EdgeInsets.only(left: 10, right: 15),
+                          //   // child: showSearch(
+                          //   //   context: context,
+                          //   //   delegate: customSearch(),
+                          //   // ),9
+                          //   child: AnimSearchBar(
+                          //     width: 370,
+                          //     textController: textController,
+                          //     onSuffixTap: () {
+                          //       setState(() {
+                          //         textController.clear();
+                          //       });
+                          //     },
+                          //     onSubmitted: (p0) {},
+                          //     helpText: "Search Events",
+                          //     closeSearchOnSuffixTap: false,
+                          //     prefixIcon: Icon(IconlyLight.search),
+                          //     style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //     ),
+                          //     rtl: true,
+                          //   ),
+                          // )
                         ],
                       ),
                     ),
@@ -227,11 +231,9 @@ class _EventPageScreenState extends State<EventPageScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ClassesPage(
-                        fetchDataUseCase: fetchDataUseCase2,
-                      ),
-                    ),
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            ClassesPage(eventsData: classesData)),
                   );
                 },
                 child: Text(
@@ -348,11 +350,9 @@ class _EventPageScreenState extends State<EventPageScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => EventsPage(
-                        fetchDataUseCase: fetchDataUseCase2,
-                      ),
-                    ),
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            EventsPage(eventsData: eventsData)),
                   );
                 },
                 child: Text(
@@ -468,11 +468,9 @@ class _EventPageScreenState extends State<EventPageScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ContestPage(
-                        fetchDataUseCase: fetchDataUseCase2,
-                      ),
-                    ),
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            ContestPage(eventsData: contestData)),
                   );
                 },
                 child: Text(
@@ -566,5 +564,9 @@ class _EventPageScreenState extends State<EventPageScreen> {
         ],
       ),
     );
+  }
+
+  customSearch() {
+    return Container();
   }
 }
