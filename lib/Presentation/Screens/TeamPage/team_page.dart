@@ -1,14 +1,8 @@
-// lib/presentation/screens/data_display_screen.dart
-
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:dynamic_tabbar/dynamic_tabbar.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../Domain/Model/team_model.dart';
 
@@ -37,7 +31,8 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
       return data;
     } catch (e) {
       print('Error fetching data: $e');
-      return [];
+      return [
+      ];
     }
   }
 
@@ -149,37 +144,44 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                     preferredSize: Size.fromHeight(50),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      child: Container(
-                        height: 40,
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white,
-                        ),
-                        child: TabBar(
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          indicator: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 40,
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            color: Colors.white,
+                            child: TabBar(
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                              ),
+                              tabs: [
+                                Tab(text: "Alumni"),
+                                Tab(text: "2024"),
+                                Tab(text: "2025"),
+                                Tab(text: "2026"),
+                              ],
+                              isScrollable: true,
+                              labelColor: Colors.white,
+                              unselectedLabelColor: Colors.black45,
+                              labelPadding:
+                                  EdgeInsets.symmetric(horizontal: 20),
+                            ),
                           ),
-                          tabs: [
-                            Tab(text: "Alumni"),
-                            Tab(text: "2024"),
-                            Tab(text: "2025"),
-                            Tab(text: "2026"),
-                          ],
-                          isScrollable: true,
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.black54,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 20),
-                        ),
+                          Container(
+                            height: 10,
+                            color: Colors.transparent,
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
                 body: TabBarView(
                   children: [
-                    TeamList(dataAlumni),
+                    AlumniList(dataAlumni),
                     TeamList(data24),
                     TeamList(data25),
                     TeamList(data26),
@@ -205,7 +207,113 @@ _launchURL(text) async {
     throw 'Could not launch $text';
   }
 }
+//----------------------------------------------Flip Card Team List View
+// SingleChildScrollView TeamList(List<Team?> data) {
+//   return SingleChildScrollView(
+//     child: Container(
+//       child: Column(
+//         children: [
+//           Container(
+//             margin: EdgeInsets.all(5),
+//             decoration: BoxDecoration(
+//               //borderRadius: BorderRadius.circular(10),
+//               color: Colors.white,
+//             ),
+//             child: GridView.builder(
+//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                     crossAxisCount: 2,
+//                     childAspectRatio: 1.0,
+//                     mainAxisSpacing: 7,
+//                     crossAxisSpacing: 7),
+//                 shrinkWrap: true,
+//                 physics: BouncingScrollPhysics(),
+//                 itemCount: data.length,
+//                 itemBuilder: (context, index) {
+//                   return FlipCard(
+//                       flipOnTouch: true,
+//                       fill: Fill
+//                           .fillFront, // Fill the back side of the card to make in the same size as the front.
+//                       direction: FlipDirection.HORIZONTAL, // default
+//                       side: CardSide.FRONT,
+//                       front: Stack(
+//                         children: <Widget>[
+//                           // CircleAvatar(
+//                           //   backgroundImage: NetworkImage(
+//                           //     data[index]!.image!.toString(),
+//                           //   ),
+//                           // ),
+//                           Container(
+//                             child: Image.network(
+//                               "${data[index]!.image!.toString()}",
+//                               fit: BoxFit.cover,
+//                               errorBuilder: (context, error, stackTrace) {
+//                                 return Image.asset(
+//                                   'images/profile.png',
 
+//                                   fit: BoxFit.cover,
+//                                 );
+//                               },
+//                             ),
+//                           ),
+//                           Container(
+//                             child: Column(
+//                               children: [
+//                                 SizedBox(
+//                                   height: 133,
+//                                 ),
+//                                 Container(
+//                                   height: 50,
+//                                   color: Colors.black54,
+//                                   child: Center(
+//                                     child: Text.rich(TextSpan(
+//                                         text: "${data[index]!.name}",
+//                                         style: TextStyle(
+//                                             fontSize: 12,
+//                                             color: Colors.white,
+//                                             fontWeight: FontWeight.w600))),
+//                                   ),
+//                                 )
+//                               ],
+//                             ),
+//                           )
+//                         ],
+//                       ),
+//                       back: Container(
+//                         color: Colors.white,
+//                         child: Column(
+//                           children: [
+//                             Text.rich(
+//                               TextSpan(
+//                                   text:
+//                                       "Phone Number : ${data[index]!.mobile!.toString()}"),
+//                             ),
+//                             Text.rich(
+//                               TextSpan(
+//                                   text:
+//                                       "B.Tech. in ${data[index]!.branch!.toString()}"),
+//                             ),
+//                             Text.rich(
+//                               TextSpan(
+//                                   text:
+//                                       "Designation : ${data[index]!.designation!.toString()}"),
+//                             ),
+//                             Text.rich(
+//                               TextSpan(
+//                                   text:
+//                                       "LinkedIn : ${data[index]!.urlLinkedIn!.toString()}"),
+//                             ),
+//                           ],
+//                         ),
+//                       ));
+//                 }),
+//           )
+//         ],
+//       ),
+//     ),
+//   );
+// }
+
+//---------------------------------------avatar team list view
 SingleChildScrollView TeamList(List<Team?> data) {
   return SingleChildScrollView(
     child: Container(
@@ -218,86 +326,80 @@ SingleChildScrollView TeamList(List<Team?> data) {
               color: Colors.white,
             ),
             child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.0,
-                    mainAxisSpacing: 7,
-                    crossAxisSpacing: 7),
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return FlipCard(
-                      flipOnTouch: true,
-                      fill: Fill
-                          .fillFront, // Fill the back side of the card to make in the same size as the front.
-                      direction: FlipDirection.HORIZONTAL, // default
-                      side: CardSide.FRONT,
-                      front: Stack(
-                        children: <Widget>[
-                          // CircleAvatar(
-                          //   backgroundImage: NetworkImage(
-                          //     data[index]!.image!.toString(),
-                          //   ),
-                          // ),
-                          Container(
-                            child: Image.network(
-                              "${data[index]!.image!.toString()}",
-                              fit: BoxFit.cover,
-                            ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.9,
+                  mainAxisSpacing: 7,
+                  crossAxisSpacing: 7),
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 0.0,
+                  shadowColor: Colors.red,
+                  color: Colors.transparent,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          String uri =
+                              ("${data[index]!.urlLinkedIn!.toString()}");
+                          launchUrl(Uri.parse(uri),
+                              mode: LaunchMode.externalApplication);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(
+                            "${data[index]!.image!.toString()}",
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'images/profile.png',
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
-                          Container(
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 133,
-                                ),
-                                Container(
-                                  height: 50,
-                                  color: Colors.black54,
-                                  child: Center(
-                                    child: Text.rich(TextSpan(
-                                        text: "${data[index]!.name}",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600))),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      back: Container(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Text.rich(
-                              TextSpan(
-                                  text:
-                                      "Phone Number : ${data[index]!.mobile!.toString()}"),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                  text:
-                                      "B.Tech. in ${data[index]!.branch!.toString()}"),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                  text:
-                                      "Designation : ${data[index]!.designation!.toString()}"),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                  text:
-                                      "LinkedIn : ${data[index]!.urlLinkedIn!.toString()}"),
-                            ),
-                          ],
                         ),
-                      ));
-                }),
-          )
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "${data[index]!.name!.toString()}",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    var url1 =
+                                        "${data[index]!.urlLinkedIn!.toString()}";
+                                    if (await canLaunchUrlString(url1)) {
+                                      await launchUrlString(url1);
+                                    } else {
+                                      throw 'Could not launch $url1';
+                                    }
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     ),
@@ -367,6 +469,14 @@ Container alumnilist(List<Team?> data) {
                           height: 90,
                           width: 90,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'images/profile.png',
+                              height: 90,
+                              width: 90,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                     ),

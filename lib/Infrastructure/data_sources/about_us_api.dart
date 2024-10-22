@@ -10,10 +10,8 @@ class AboutUsApi {
   Future<AboutUs?> fetchData() async {
     // ignore: unnecessary_string_interpolations
     final Uri uri = Uri.parse('$baseUrl');
-
     try {
       final response = await http.get(uri);
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         return AboutUs.fromJson(data);

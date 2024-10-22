@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/login.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
+import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -77,7 +78,7 @@ class WelcomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => RegisterPage(),
+                                builder: (context) => HomePage(),
                               ),
                             );
                           },

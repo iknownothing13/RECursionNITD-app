@@ -2,21 +2,15 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:recursion/Application/api_interaction/about_us_api_use_case.dart';
 import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
 import 'package:recursion/Presentation/Screens/EventsPage/classes.dart';
 import 'package:recursion/Presentation/Screens/EventsPage/contest.dart';
 import 'package:recursion/Presentation/Screens/EventsPage/events.dart';
-import '../../../Application/api_interaction/team_api_use_case.dart';
 import '../../../Domain/Model/events_model.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
 
 import '../../../Infrastructure/api_routes/api_routes.dart';
 import '../../../Infrastructure/data_sources/Events_api.dart';
-import '../../../Infrastructure/data_sources/about_us_api.dart';
-import '../../../Infrastructure/data_sources/team_api.dart';
 
 class EventPageScreen extends StatefulWidget {
   final FetchDataUseCaseEvent fetchDataUseCase;
