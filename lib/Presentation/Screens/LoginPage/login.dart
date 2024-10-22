@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:recursion/Infrastructure/data_sources/signin_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:recursion/Infrastructure/data_sources/Auth/signin_api.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
 
@@ -12,32 +11,44 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  ///SIGNIN------->>>>>>>>>>>>>>>>>>>>>>>>>>>>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final SigninApi _signinApi =
       SigninApi(baseurl: 'https://recnitdgp.pythonanywhere.com/api/token/');
+
   Future<void> _signin() async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
-    bool? success = await _signinApi.signin(username, password);
-    if (success == true) {
-      Navigator.pushReplacement(
-          context, CupertinoPageRoute(builder: (context) => HomePage()));
-    } else {
+
+    try {
+      bool success = await _signinApi.signin(username, password);
+      if (success) {
+        Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (context) => HomePage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Failed to sign in',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        );
+      }
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(
-          'Failed to login',
-          style: TextStyle(fontSize: 18),
-        )),
+          content: Text(
+            error is ApiError ? error.message : 'Failed to login',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
       );
     }
   }
 
-  ///SIGNIN------->>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   bool isPasswordVisible = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,10 +59,6 @@ class _SignInPageState extends State<SignInPage> {
         leading: BackButton(
           onPressed: () {
             Navigator.pop(context);
-            // Navigator.push(
-            //   context,
-            //   CupertinoPageRoute(builder: (context) => WelcomePage()),
-            // );
           },
           color: Colors.white,
         ),

@@ -11,45 +11,40 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  ///SIGNOUT------->>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  final TextEditingController _email = new TextEditingController();
-  final TextEditingController _usernamer = new TextEditingController();
-  final TextEditingController _password = new TextEditingController();
-  final TextEditingController _password2 = new TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _password2 = TextEditingController();
   final SignupApi _signupApi = SignupApi(
       baseurl: 'https://recnitdgp.pythonanywhere.com/api/users/register/');
-  Future<void> _signup() async {
-    // if (_password.text != _password2.text) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Enter the same password')),
-    //   );
-    // }
 
-    final String username = _usernamer.text;
+  Future<void> _signup() async {
+    final String username = _username.text;
     final String email = _email.text;
     final String password = _password.text;
     final String password2 = _password2.text;
-    bool? success =
-        await _signupApi.signup(username, email, password, password2);
-    if (success == true) {
-      Navigator.push(
-        context,
-        CupertinoPageRoute(builder: (context) => SignInPage()),
-      );
-    } else {
+
+    try {
+      bool? success = await _signupApi.signup(username, email, password, password2);
+      if (success == true) {
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(builder: (context) => SignInPage()),
+        );
+      }
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-          'Failed to register user',
+          error is ApiError ? error.message : 'Failed to SignUp',
           style: TextStyle(fontSize: 18),
         )),
       );
     }
   }
 
-  ///SIGNOUT------->>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   bool passwordVisibility = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +54,6 @@ class _RegisterPageState extends State<RegisterPage> {
         elevation: 0,
         leading: BackButton(
           onPressed: () {
-            // Navigator.push(context,
-            //     CupertinoPageRoute(builder: (context) => WelcomePage()));
             Navigator.pop(context);
           },
           color: Colors.white,
@@ -72,8 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
             SliverFillRemaining(
               hasScrollBody: false,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   children: [
                     Flexible(
@@ -100,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           MyTextField(
                             hintText: 'Username',
                             inputType: TextInputType.name,
-                            cntrl: _usernamer,
+                            cntrl: _username,
                           ),
                           MyTextField(
                             cntrl: _email,
@@ -122,15 +114,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 suffixIcon: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: IconButton(
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onPressed: () {
                                       setState(() {
-                                        passwordVisibility =
-                                            !passwordVisibility;
+                                        passwordVisibility = !passwordVisibility;
                                       });
                                     },
                                     icon: Icon(
@@ -179,15 +169,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 suffixIcon: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: IconButton(
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onPressed: () {
                                       setState(() {
-                                        passwordVisibility =
-                                            !passwordVisibility;
+                                        passwordVisibility = !passwordVisibility;
                                       });
                                     },
                                     icon: Icon(
@@ -301,6 +289,7 @@ class MyTextField extends StatelessWidget {
     required this.inputType,
     required this.cntrl,
   }) : super(key: key);
+
   final String hintText;
   final TextInputType inputType;
   final TextEditingController cntrl;
