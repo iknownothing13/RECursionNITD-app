@@ -1,7 +1,7 @@
 class Event {
   int? count;
-  Null? next;
-  Null? previous;
+  Null next;
+  Null previous;
   List<Results>? results;
 
   Event({this.count, this.next, this.previous, this.results});

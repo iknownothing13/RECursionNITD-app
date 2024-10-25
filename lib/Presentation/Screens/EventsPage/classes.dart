@@ -1,8 +1,6 @@
 import 'package:fluid_dialog/fluid_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
 import '../../../Domain/Model/events_model.dart';
-import 'package:intl/intl.dart';
 
 class ClassesPage extends StatefulWidget {
   List<Results?> eventsData;

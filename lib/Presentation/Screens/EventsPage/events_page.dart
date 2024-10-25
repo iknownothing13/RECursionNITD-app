@@ -1,5 +1,3 @@
-// lib/presentation/screens/data_display_screen.dart
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
@@ -23,7 +21,16 @@ class EventPageScreen extends StatefulWidget {
 
 class _EventPageScreenState extends State<EventPageScreen> {
   late Future<List<Results?>> _dataFuture;
+  late double height;
+  late double width;
   late final FetchDataUseCaseEvent fetchDataUseCase2;
+
+  // Updated minimalist color scheme with black, white and green
+  final Color primaryColor = Colors.black;
+  final Color accentColor = Color(0xFF00C853); // Material Green
+  final Color backgroundLight = Colors.white;
+  final Color textDark = Colors.black87;
+  final Color cardShadow = Colors.black12;
 
   _EventPageScreenState() {
     fetchDataUseCase2 = FetchDataUseCaseEvent(EventApi(ApiRoutes.eventurl));
@@ -40,38 +47,37 @@ class _EventPageScreenState extends State<EventPageScreen> {
       final data = await widget.fetchDataUseCase.execute();
       return data;
     } catch (e) {
-      // Handle errors gracefully
       print('Error fetching data: $e');
       return [];
     }
   }
 
-  TextEditingController textController = TextEditingController();
-
-  var height, width;
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: primaryColor,
       body: FutureBuilder<List<Results?>>(
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: SimpleCircularProgressBar(
-                progressColors: [Colors.orange, Colors.red],
-                backColor: Colors.black,
-                size: 100,
-                fullProgressColor: Colors.green,
+                progressColors: [accentColor],
+                backColor: Colors.white24,
+                size: 60,
+                fullProgressColor: accentColor,
                 animationDuration: 1,
               ),
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Error: ${snapshot.error}'),
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(color: Colors.white),
+              ),
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
@@ -82,122 +88,37 @@ class _EventPageScreenState extends State<EventPageScreen> {
             final contestData =
                 data.where((event) => event?.eventType == 'Contest').toList();
 
-            // Build your UI using the 'data' variable
-            // final aboutUs = snapshot.data!;
             return SingleChildScrollView(
-              //physics: BouncingScrollPhysics(),
-              child: Container(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40),
-                        ),
-                        color: Colors.indigo,
-                      ),
-                      height: height * 0.27,
-                      width: width,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, top: 20, right: 5),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    'images/REC_logo.png',
-                                    height: 40,
-                                    width: 40,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    right: 140, left: 5, top: 20),
-                                child: Text(
-                                  "RECursion",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Text(
-                          //   "Events Page",
-                          //   style: TextStyle(
-                          //       color: Colors.white,
-                          //       fontWeight: FontWeight.w400,
-                          //       fontSize: 20),
-                          // ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 10, left: 15, right: 20),
-                            child: Text(
-                              "We don't remember the dates, we remember events!",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18),
-                            ),
-                          ),
-                          // Padding(
-                          //   padding: EdgeInsets.only(left: 10, right: 15),
-                          //   // child: showSearch(
-                          //   //   context: context,
-                          //   //   delegate: customSearch(),
-                          //   // ),9
-                          //   child: AnimSearchBar(
-                          //     width: 370,
-                          //     textController: textController,
-                          //     onSuffixTap: () {
-                          //       setState(() {
-                          //         textController.clear();
-                          //       });
-                          //     },
-                          //     onSubmitted: (p0) {},
-                          //     helpText: "Search Events",
-                          //     closeSearchOnSuffixTap: false,
-                          //     prefixIcon: Icon(IconlyLight.search),
-                          //     style: TextStyle(
-                          //       fontFamily: 'Poppins',
-                          //     ),
-                          //     rtl: true,
-                          //   ),
-                          // )
-                        ],
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: backgroundLight,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(32),
+                        topRight: Radius.circular(32),
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 24),
+                        _buildContent(
+                            classesData, eventsData, contestData, width),
+                      ],
                     ),
-                    if (classesData.isNotEmpty) classes(classesData),
-                    //classes(data),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    //events(data),
-                    if (eventsData.isNotEmpty) events(eventsData),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    //contest(data),
-                    if (contestData.isNotEmpty) contest(contestData),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           } else {
-            // Handle other cases, e.g., when there is no data
             return Center(
-              child: Text('No data available.'),
+              child: Text(
+                'No data available.',
+                style: TextStyle(color: Colors.white),
+              ),
             );
           }
         },
@@ -205,362 +126,225 @@ class _EventPageScreenState extends State<EventPageScreen> {
     );
   }
 
-  Container classes(List<Results?> classesData) {
+  Widget _buildHeader() {
     return Container(
+      height: height * 0.25,
+      padding: EdgeInsets.fromLTRB(24, 48, 24, 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Classes",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Image.asset(
+                  'images/REC_logo.png',
+                  height: 50,
+                  width: 50,
                 ),
               ),
-              SizedBox(
-                width: width * 0.50,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            ClassesPage(eventsData: classesData)),
-                  );
-                },
-                child: Text(
-                  "View All",
-                  style: TextStyle(fontSize: 17),
+              SizedBox(width: 16),
+              Text(
+                "RECursion",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
-              SizedBox(
-                width: 5,
+              Spacer(),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.account_circle_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
               ),
-              Icon(
-                Icons.arrow_forward_outlined,
-                size: 17,
-              )
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            margin: EdgeInsets.all(5),
-            color: Colors.white,
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.8,
-                  //mainAxisSpacing: 7,
-                  //crossAxisSpacing: 7
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Container(
-                    ///Here replace Card Widget with Container
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.indigo.shade300,
-                            spreadRadius: 1,
-                            blurRadius: 6)
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: Image.network(
-                                  height: 80,
-                                  '${classesData.elementAtOrNull(index)?.image}'),
-                            ),
-                            // title
-                            Center(
-                              child: Text(
-                                '${classesData.elementAtOrNull(index)?.title}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '${classesData.elementAtOrNull(index)?.venue}',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1),
-                            ),
-                            SizedBox(width: 15),
-                            Text(
-                              '${classesData.elementAtOrNull(index)?.targetYear}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+          Spacer(),
+          Text(
+            "Programming Community of\nNIT Durgapur",
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              fontSize: 24,
+              height: 1.3,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Container events(List<Results?> eventsData) {
-    return Container(
+  Widget _buildContent(List<Results?> classesData, List<Results?> eventsData,
+      List<Results?> contestData, double width) {
+    return Padding(
+      padding: EdgeInsets.all(16),
       child: Column(
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Events",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(
-                width: width * 0.50,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
+          if (classesData.isNotEmpty)
+            _buildSection(
+                "Classes",
+                classesData,
+                width,
+                () => Navigator.push(
                     context,
                     CupertinoPageRoute(
                         builder: (context) =>
-                            EventsPage(eventsData: eventsData)),
-                  );
-                },
-                child: Text(
-                  "View All",
-                  style: TextStyle(fontSize: 17),
-                ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Icon(
-                Icons.arrow_forward_outlined,
-                size: 17,
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            color: Colors.white,
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.8,
-                  //mainAxisSpacing: 7,
-                  //crossAxisSpacing: 7
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: eventsData.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    ///Previous there is a Card Widgest I replace with Container for shadow
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.indigo.shade300,
-                            spreadRadius: 1,
-                            blurRadius: 6)
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: Image.network(
-                                  height: 80,
-                                  '${eventsData.elementAtOrNull(index)?.image}'),
-                            ),
-                            // title
-                            Center(
-                              child: Text(
-                                '${eventsData.elementAtOrNull(index)?.title}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '${eventsData.elementAtOrNull(index)?.venue}',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1),
-                            ),
-                            SizedBox(width: 15),
-                            Text(
-                              '${eventsData.elementAtOrNull(index)?.targetYear}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
+                            ClassesPage(eventsData: classesData)))),
+          SizedBox(height: 24),
+          if (eventsData.isNotEmpty)
+            _buildSection(
+                "Events",
+                eventsData,
+                width,
+                () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            EventsPage(eventsData: eventsData)))),
+          SizedBox(height: 24),
+          if (contestData.isNotEmpty)
+            _buildSection(
+                "Contests",
+                contestData,
+                width,
+                () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            ContestPage(eventsData: contestData)))),
         ],
       ),
     );
   }
 
-  Container contest(List<Results?> contestData) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Contest",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+  Widget _buildSection(
+      String title, List<Results?> data, double width, VoidCallback onViewAll) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textDark,
+                letterSpacing: 0.5,
               ),
-              SizedBox(
-                width: width * 0.50,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            ContestPage(eventsData: contestData)),
-                  );
-                },
-                child: Text(
-                  "View All",
-                  style: TextStyle(fontSize: 17),
-                ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Icon(
-                Icons.arrow_forward_outlined,
-                size: 17,
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            color: Colors.white,
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.8,
-                  //mainAxisSpacing: 7,
-                  //crossAxisSpacing: 7
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: contestData.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    ///Previous there is a Card Widgest I replace with Container for shadow
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.indigo.shade300,
-                            spreadRadius: 1,
-                            blurRadius: 6)
-                      ],
+            ),
+            TextButton(
+              onPressed: onViewAll,
+              child: Row(
+                children: [
+                  Text(
+                    "View All",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: accentColor,
+                      fontWeight: FontWeight.w600,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: Image.network(
-                                  height: 80,
-                                  '${contestData.elementAtOrNull(index)?.image}'),
-                            ),
-                            // title
-                            Center(
-                              child: Text(
-                                '${contestData.elementAtOrNull(index)?.title}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '${contestData.elementAtOrNull(index)?.venue}',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1),
-                            ),
-                            SizedBox(width: 15),
-                            Text(
-                              '${contestData.elementAtOrNull(index)?.targetYear}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ],
-      ),
+                  ),
+                  SizedBox(width: 4),
+                  Icon(Icons.arrow_forward, color: accentColor, size: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16),
+        _buildGrid(data),
+      ],
     );
   }
 
-  customSearch() {
-    return Container();
+  Widget _buildGrid(List<Results?> data) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.85,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+      ),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: data.length > 4 ? 4 : data.length,
+      itemBuilder: (context, index) {
+        final item = data[index];
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: cardShadow,
+                spreadRadius: 0,
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  '${item?.image}',
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  children: [
+                    Text(
+                      '${item?.title}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: textDark,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      '${item?.venue}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: textDark.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      '${item?.targetYear}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: accentColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
