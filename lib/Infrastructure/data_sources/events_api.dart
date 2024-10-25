@@ -1,45 +1,42 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Domain/Model/events_model.dart';
 
-
 class EventApi {
-  String baseUrl;
+  final String baseUrl;
   EventApi(this.baseUrl);
 
   Future<List<Results?>> fetchData() async {
-    // ignore: unnecessary_string_interpolations
-    baseUrl = 'https://recnitdgp.pythonanywhere.com/api/events/';
     final Uri uri = Uri.parse(baseUrl);
-    List<Results?> post = [];
-    try {
-      final response = await http.get(uri);
-    
-      if (response.statusCode == 200) {
-        
-        var data = jsonDecode(response.body.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        post.clear();
-        for (Map<String, dynamic> i in data['results']) {
-          post.add(Results.fromJson(i));
-        }
-  
-        return post;
-      } else {
-        throw ApiError(
-          message: 'Failed to fetch data. Status code: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      throw ApiError(message: 'Failed to fetch data. Error: $e');
+    // Check for cached data
+    String? cachedData = prefs.getString('eventData');
+    if (cachedData != null) {
+      return _parseData(json.decode(cachedData));
     }
+
+    // Fetch data from API and cache it
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      prefs.setString('eventData', response.body); // Fixed key to 'eventData'
+      return _parseData(json.decode(response.body));
+    } else {
+      throw ApiError(
+          'Failed to fetch data. Status code: ${response.statusCode}');
+    }
+  }
+
+  List<Results?> _parseData(dynamic data) {
+    // Assuming data['results'] contains the list of events
+    return (data['results'] as List)
+        .map((item) => Results.fromJson(item))
+        .toList();
   }
 }
 
 class ApiError implements Exception {
   final String message;
-
-  ApiError({required this.message});
+  ApiError(this.message);
 }
