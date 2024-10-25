@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.recursion">
-   <application
+    <!-- Add the Internet permission here -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
         android:label="recursion"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

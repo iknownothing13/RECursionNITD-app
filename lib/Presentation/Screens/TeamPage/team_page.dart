@@ -12,12 +12,18 @@ class TeamPageScreen extends StatefulWidget {
   TeamPageScreen({super.key, required this.fetchDataUseCase});
 
   @override
-  // ignore: library_private_types_in_public_api
   _TeamPageScreenState createState() => _TeamPageScreenState();
 }
 
 class _TeamPageScreenState extends State<TeamPageScreen> {
   late Future<List<Team?>> _dataFuture;
+
+  // Updated color scheme
+  final Color primaryColor = Colors.black;
+  final Color accentColor = Color(0xFF00C853); // Material Green
+  final Color backgroundLight = Colors.white;
+  final Color textDark = Colors.black87;
+  final Color cardShadow = Colors.black12;
 
   @override
   void initState() {
@@ -31,8 +37,7 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
       return data;
     } catch (e) {
       print('Error fetching data: $e');
-      return [
-      ];
+      return [];
     }
   }
 
@@ -44,23 +49,24 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundLight,
       body: FutureBuilder<List<Team?>>(
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: SimpleCircularProgressBar(
-                progressColors: [Colors.orange, Colors.red],
-                backColor: Colors.black,
-                size: 100,
-                fullProgressColor: Colors.green,
+                progressColors: [accentColor],
+                backColor: Colors.white24,
+                size: 60,
+                fullProgressColor: accentColor,
                 animationDuration: 1,
               ),
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Error: ${snapshot.error}'),
+              child: Text('Error: ${snapshot.error}',
+                  style: TextStyle(color: textDark)),
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
@@ -83,13 +89,13 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
               child: Scaffold(
                 appBar: AppBar(
                   toolbarHeight: height * 0.15,
-                  backgroundColor: Colors.black,
+                  backgroundColor: primaryColor,
                   title: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(30),
                       ),
-                      color: Colors.black,
+                      color: primaryColor,
                     ),
                     height: height * 0.15,
                     child: Column(
@@ -115,7 +121,7 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                                 child: Text(
                                   "RECursion",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: backgroundLight,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -130,7 +136,7 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                           child: Text(
                             "Meet the Team RECursion",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: backgroundLight,
                               fontFamily: 'Poppins',
                               fontSize: 20,
                             ),
@@ -149,11 +155,11 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                           Container(
                             height: 40,
                             margin: EdgeInsets.symmetric(horizontal: 20),
-                            color: Colors.white,
+                            color: backgroundLight,
                             child: TabBar(
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
-                                color: Colors.black,
+                                color: accentColor,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15)),
                               ),
@@ -164,8 +170,8 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
                                 Tab(text: "2026"),
                               ],
                               isScrollable: true,
-                              labelColor: Colors.white,
-                              unselectedLabelColor: Colors.black45,
+                              labelColor: backgroundLight,
+                              unselectedLabelColor: textDark.withOpacity(0.5),
                               labelPadding:
                                   EdgeInsets.symmetric(horizontal: 20),
                             ),
@@ -191,7 +197,8 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
             );
           } else {
             return Center(
-              child: Text('No data available.'),
+              child:
+                  Text('No data available.', style: TextStyle(color: textDark)),
             );
           }
         },
@@ -200,120 +207,6 @@ class _TeamPageScreenState extends State<TeamPageScreen> {
   }
 }
 
-_launchURL(text) async {
-  if (await canLaunch(text)) {
-    await launch(text);
-  } else {
-    throw 'Could not launch $text';
-  }
-}
-//----------------------------------------------Flip Card Team List View
-// SingleChildScrollView TeamList(List<Team?> data) {
-//   return SingleChildScrollView(
-//     child: Container(
-//       child: Column(
-//         children: [
-//           Container(
-//             margin: EdgeInsets.all(5),
-//             decoration: BoxDecoration(
-//               //borderRadius: BorderRadius.circular(10),
-//               color: Colors.white,
-//             ),
-//             child: GridView.builder(
-//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                     crossAxisCount: 2,
-//                     childAspectRatio: 1.0,
-//                     mainAxisSpacing: 7,
-//                     crossAxisSpacing: 7),
-//                 shrinkWrap: true,
-//                 physics: BouncingScrollPhysics(),
-//                 itemCount: data.length,
-//                 itemBuilder: (context, index) {
-//                   return FlipCard(
-//                       flipOnTouch: true,
-//                       fill: Fill
-//                           .fillFront, // Fill the back side of the card to make in the same size as the front.
-//                       direction: FlipDirection.HORIZONTAL, // default
-//                       side: CardSide.FRONT,
-//                       front: Stack(
-//                         children: <Widget>[
-//                           // CircleAvatar(
-//                           //   backgroundImage: NetworkImage(
-//                           //     data[index]!.image!.toString(),
-//                           //   ),
-//                           // ),
-//                           Container(
-//                             child: Image.network(
-//                               "${data[index]!.image!.toString()}",
-//                               fit: BoxFit.cover,
-//                               errorBuilder: (context, error, stackTrace) {
-//                                 return Image.asset(
-//                                   'images/profile.png',
-
-//                                   fit: BoxFit.cover,
-//                                 );
-//                               },
-//                             ),
-//                           ),
-//                           Container(
-//                             child: Column(
-//                               children: [
-//                                 SizedBox(
-//                                   height: 133,
-//                                 ),
-//                                 Container(
-//                                   height: 50,
-//                                   color: Colors.black54,
-//                                   child: Center(
-//                                     child: Text.rich(TextSpan(
-//                                         text: "${data[index]!.name}",
-//                                         style: TextStyle(
-//                                             fontSize: 12,
-//                                             color: Colors.white,
-//                                             fontWeight: FontWeight.w600))),
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                       back: Container(
-//                         color: Colors.white,
-//                         child: Column(
-//                           children: [
-//                             Text.rich(
-//                               TextSpan(
-//                                   text:
-//                                       "Phone Number : ${data[index]!.mobile!.toString()}"),
-//                             ),
-//                             Text.rich(
-//                               TextSpan(
-//                                   text:
-//                                       "B.Tech. in ${data[index]!.branch!.toString()}"),
-//                             ),
-//                             Text.rich(
-//                               TextSpan(
-//                                   text:
-//                                       "Designation : ${data[index]!.designation!.toString()}"),
-//                             ),
-//                             Text.rich(
-//                               TextSpan(
-//                                   text:
-//                                       "LinkedIn : ${data[index]!.urlLinkedIn!.toString()}"),
-//                             ),
-//                           ],
-//                         ),
-//                       ));
-//                 }),
-//           )
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-//---------------------------------------avatar team list view
 SingleChildScrollView TeamList(List<Team?> data) {
   return SingleChildScrollView(
     child: Container(
@@ -322,7 +215,6 @@ SingleChildScrollView TeamList(List<Team?> data) {
           Container(
             margin: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              //borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
             child: GridView.builder(
@@ -337,7 +229,7 @@ SingleChildScrollView TeamList(List<Team?> data) {
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 0.0,
-                  shadowColor: Colors.red,
+                  shadowColor: Colors.black12,
                   color: Colors.transparent,
                   child: Column(
                     children: [
@@ -366,9 +258,7 @@ SingleChildScrollView TeamList(List<Team?> data) {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       Container(
                         child: RichText(
                           text: TextSpan(
@@ -376,9 +266,10 @@ SingleChildScrollView TeamList(List<Team?> data) {
                               TextSpan(
                                 text: "${data[index]!.name!.toString()}",
                                 style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () async {
                                     var url1 =
@@ -418,7 +309,11 @@ SingleChildScrollView AlumniList(List<Team?> data) {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Batch of : $year",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
             ),
             alumnilist(yearData),
@@ -436,7 +331,6 @@ Container alumnilist(List<Team?> data) {
         Container(
           margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
-            //borderRadius: BorderRadius.circular(10),
             color: Colors.white,
           ),
           child: GridView.builder(
@@ -451,7 +345,7 @@ Container alumnilist(List<Team?> data) {
             itemBuilder: (context, index) {
               return Card(
                 elevation: 0.0,
-                shadowColor: Colors.red,
+                shadowColor: Colors.black12,
                 color: Colors.transparent,
                 child: Column(
                   children: [
@@ -480,9 +374,7 @@ Container alumnilist(List<Team?> data) {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
+                    SizedBox(height: 5),
                     Container(
                       child: RichText(
                         text: TextSpan(
@@ -490,9 +382,10 @@ Container alumnilist(List<Team?> data) {
                             TextSpan(
                               text: "${data[index]!.name!.toString()}",
                               style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
                                   var url1 =

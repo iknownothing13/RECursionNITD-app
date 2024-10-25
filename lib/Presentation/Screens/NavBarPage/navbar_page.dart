@@ -10,6 +10,7 @@ import 'package:recursion/Presentation/Screens/TeamPage/team_page.dart';
 import '../../../Application/api_interaction/about_us_api_use_case.dart';
 import '../../../Infrastructure/data_sources/Events_api.dart';
 import '../../../Infrastructure/data_sources/about_us_api.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -23,6 +24,12 @@ class _HomePageState extends State<HomePage> {
   late final FetchDataUseCase fetchDataUseCase1;
   late final FetchDataUseCaseEvent fetchDataUseCase2;
   late final FetchDataUseCaseTeam fetchDataUseCase3;
+  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+
+  // Define colors
+  final Color primaryColor = Colors.black;
+  final Color accentColor = const Color(0xFF00BD6D); // Green
+  final Color backgroundLight = Colors.white;
 
   _HomePageState() {
     fetchDataUseCase1 = FetchDataUseCase(AboutUsApi(ApiRoutes.aboutusurl));
@@ -30,64 +37,43 @@ class _HomePageState extends State<HomePage> {
     fetchDataUseCase3 = FetchDataUseCaseTeam(TeamApi(ApiRoutes.teamurl));
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // appBar: appBar(),
         body: (() {
           switch (_selectedIndex) {
             case 0:
-              return Homepage(fetchDataUseCase: fetchDataUseCase1,);
+              return Homepage(
+                fetchDataUseCase: fetchDataUseCase1,
+              );
             case 1:
               return EventPageScreen(fetchDataUseCase: fetchDataUseCase2);
             case 2:
               return TeamPageScreen(fetchDataUseCase: fetchDataUseCase3);
-
             default:
-              return null; // Handle other cases if needed
+              return null;
           }
         })(),
-        bottomNavigationBar: Container(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-            child: GNav(
-              backgroundColor: Colors.white,
-              color: Colors.black,
-              activeColor: Color.fromRGBO(81, 65, 228, 1),
-              tabBackgroundColor: Colors.white,
-              padding: EdgeInsets.all(15),
-              gap: 9,
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              tabs: [
-                // elements in the bottom Nav Bar
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
-                  iconSize: 25,
-                  textSize: 25,
-                ),
-                GButton(
-                  icon: Icons.event,
-                  text: 'Events',
-                  iconSize: 25,
-                  textSize: 25,
-                ),
-                GButton(
-                  icon: Icons.people_alt,
-                  text: 'Team',
-                  iconSize: 27,
-                  textSize: 25,
-                ),
-              ],
-            ),
-          ),
+        bottomNavigationBar: CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          index: 0,
+          items: [
+            Icon(Icons.home, size: 30, color: accentColor),
+            Icon(Icons.event, size: 30, color: accentColor),
+            Icon(Icons.account_circle_outlined, size: 30, color: accentColor),
+          ],
+          color: backgroundLight,
+          //buttonBackgroundColor: accentColor,
+          backgroundColor: primaryColor,
+          animationCurve: Curves.easeInOut,
+          animationDuration: Duration(milliseconds: 500),
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          letIndexChange: (index) => true,
         ),
       ),
     );
@@ -95,5 +81,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 AppBar appBar() {
-  return AppBar(backgroundColor: Colors.black);
+  return AppBar(
+    backgroundColor: Colors.black,
+    elevation: 0,
+  );
 }
