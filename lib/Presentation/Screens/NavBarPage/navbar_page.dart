@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
 import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
 import 'package:recursion/Infrastructure/api_routes/api_routes.dart';
