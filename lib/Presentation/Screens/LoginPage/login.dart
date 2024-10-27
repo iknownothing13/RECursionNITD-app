@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recursion/Infrastructure/data_sources/Auth/signin_api.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -23,13 +24,17 @@ class _SignInPageState extends State<SignInPage> {
     try {
       bool success = await _signinApi.signin(username, password);
       if (success) {
+        // Save login status to shared preferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+
         Navigator.pushReplacement(
             context, CupertinoPageRoute(builder: (context) => HomePage()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Failed to sign in',
+              'Failed to login',
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -229,7 +234,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 child: TextButton(
                   style: ButtonStyle(
-                    overlayColor: WidgetStateProperty.resolveWith(
+                    overlayColor: MaterialStateProperty.resolveWith(
                       (states) => Colors.black12,
                     ),
                   ),

@@ -4,46 +4,55 @@ import 'package:recursion/Presentation/Screens/LoginPage/login.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.05,
+            vertical: height * 0.05,
+          ),
           child: Column(
             children: [
               Flexible(
                 child: Column(
                   children: [
-                    SizedBox(height: 20),
                     Center(
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: Image(
-                          image: AssetImage('images/REC_logo.png'),
-                        ),
+                        width: width * 0.7,
+                        height: height * 0.3,
+                        child: Image.asset('images/REC_logo.png'),
                       ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: height * 0.05),
                     Text(
                       "Enterprise team\ncollaboration.",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 34,
+                        fontSize: width * 0.05,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: height * 0.02),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: width * 0.8,
                       child: Text(
                         "Bring together your files, your tools, project and people. Including a new mobile and desktop application.",
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 15,
+                          fontSize: width * 0.03,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -51,9 +60,8 @@ class WelcomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: height * 0.05),
               Container(
-                height: 60,
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(18),
@@ -62,8 +70,8 @@ class WelcomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Container(
-                        height: 60,
-                        width: double.infinity,
+                        height: height *
+                            0.08, // Adjust button height based on screen height
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18),
@@ -78,7 +86,7 @@ class WelcomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => HomePage(),
+                                builder: (context) => RegisterPage(),
                               ),
                             );
                           },
@@ -86,18 +94,18 @@ class WelcomePage extends StatelessWidget {
                             'Register',
                             style: TextStyle(
                               color: Colors.black87,
-                              fontSize: 16,
+                              fontSize: width *
+                                  0.04, // Adjust font size based on width
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: width * 0.02),
                     Expanded(
                       child: Container(
-                        height: 60,
-                        width: double.infinity,
+                        height: height * 0.08,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18),
@@ -109,7 +117,7 @@ class WelcomePage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => SignInPage(),
@@ -120,7 +128,7 @@ class WelcomePage extends StatelessWidget {
                             'Login',
                             style: TextStyle(
                               color: Colors.black87,
-                              fontSize: 16,
+                              fontSize: width * 0.04,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

@@ -33,11 +33,7 @@ class AppRouter {
           settings: settings,
         );
 
-      case AppRoutes.events:
-        return MaterialPageRoute<dynamic>(
-          builder: (_) => EventPageScreen(fetchDataUseCase: fetchDataUseCase2),
-          settings: settings,
-        );
+      // Add any additional routes here if needed
 
       default:
         return MaterialPageRoute<dynamic>(
