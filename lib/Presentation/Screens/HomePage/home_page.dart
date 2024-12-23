@@ -4,14 +4,21 @@ import 'package:recursion/Application/api_interaction/about_us_api_use_case.dart
 import 'package:recursion/Domain/Model/about_us_model.dart';
 import 'package:recursion/Presentation/Screens/AskREC/siteview_askREC_page.dart';
 import 'package:recursion/Presentation/Screens/Blog/siteview_blog_page.dart';
-import 'package:recursion/Presentation/Screens/GetStarted/siteview_getStarted_page.dart';
+import 'package:recursion/Presentation/Screens/GetStarted/getting_started_page.dart';
 import 'package:recursion/Presentation/Screens/Interview_experiences/siteview_interview_page.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-class Homepage extends StatefulWidget {
-  final FetchDataUseCase fetchDataUseCase;
+import '../../../Application/api_interaction/getting_started_api_use_case.dart';
+import '../../../Infrastructure/api_routes/api_routes.dart';
+import '../../../Infrastructure/data_sources/getting_started_api.dart';
 
-  Homepage({super.key, required this.fetchDataUseCase});
+class Homepage extends StatefulWidget {
+  final FetchDataUseCase fetchDataUseCase1;
+  late final FetchDataUseCaseGetting_started fetchDataUseCase4;
+  Homepage(
+      {super.key,
+      required this.fetchDataUseCase1,
+      required this.fetchDataUseCase4});
 
   @override
   _HomepageState createState() => _HomepageState();
@@ -37,7 +44,7 @@ class _HomepageState extends State<Homepage> {
 
   Future<AboutUs?> fetchData() async {
     try {
-      return await widget.fetchDataUseCase.execute();
+      return await widget.fetchDataUseCase1.execute();
     } catch (e) {
       print('Error fetching data: $e');
       return null;
@@ -59,12 +66,15 @@ class _HomepageState extends State<Homepage> {
   ];
 
   final List<Widget> routes = [
-    SiteviewGetstartedPage(),
+    GettingStartedPage(
+      fetchDataUseCase: FetchDataUseCaseGetting_started(
+        Getting_startedApi(ApiRoutes.gettingstartedurl),
+      ),
+    ),
     SiteviewInterviewPage(),
     SiteViewAskRECPage(),
     SiteviewBlogPage(),
   ];
-
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -94,41 +104,49 @@ class _HomepageState extends State<Homepage> {
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: backgroundLight,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(32),
-                        topRight: Radius.circular(32),
+            return Stack(
+              children: [
+                _buildHeader(),
+                SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: height * 0.26,
+                        color: Colors.transparent,
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 24),
-                        _buildSectionTitle('Quick Access'),
-                        _buildQuickAccess(),
-                        _buildSectionDivider(),
-                        _buildSectionTitle('Who We Are?'),
-                        _buildWhoWeAreDescription(),
-                        _buildSectionDivider(),
-                        _buildSectionTitle('Our Impact'),
-                        _buildWitnessPart(data.contestCount, data.hoursTeaching,
-                            data.yearsOfExperience),
-                        _buildSectionDivider(),
-                        _buildSectionTitle('Contact Us'),
-                        _buildContactsSection(),
-                        SizedBox(height: 32),
-                      ],
-                    ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: backgroundLight,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(32),
+                            topRight: Radius.circular(32),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 24),
+                            _buildSectionTitle('Quick Access'),
+                            _buildQuickAccess(),
+                            _buildSectionDivider(),
+                            _buildSectionTitle('Who We Are?'),
+                            _buildWhoWeAreDescription(),
+                            _buildSectionDivider(),
+                            _buildSectionTitle('Our Impact'),
+                            _buildWitnessPart(data.contestCount,
+                                data.hoursTeaching, data.yearsOfExperience),
+                            _buildSectionDivider(),
+                            _buildSectionTitle('Contact Us'),
+                            _buildContactsSection(),
+                            SizedBox(height: 32),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           } else {
             return Center(
@@ -145,53 +163,72 @@ class _HomepageState extends State<Homepage> {
 
   Widget _buildHeader() {
     return Container(
-      height: height * 0.25,
-      padding: EdgeInsets.fromLTRB(24, 48, 24, 24),
+      height: height * 0.26,
+      padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Image.asset(
+                      'images/REC_logo.png',
+                      height: height * 0.05,
+                      width: width * 0.2,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Text(
+                    "RECursion",
+                    style: TextStyle(
+                      color: backgroundLight,
+                      fontSize: height * 0.04,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
               Container(
-                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: backgroundLight.withOpacity(0.3),
+                    width: 2,
+                  ),
                 ),
-                child: Image.asset(
-                  'images/REC_logo.png',
-                  height: 50,
-                  width: 50,
-                ),
-              ),
-              SizedBox(width: 16),
-              Text(
-                "RECursion",
-                style: TextStyle(
-                  color: backgroundLight,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                  color: backgroundLight,
-                  size: 32,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.account_circle_outlined,
+                    color: backgroundLight,
+                    size: 28,
+                  ),
+                  tooltip: 'Profile',
                 ),
               ),
             ],
           ),
-          Spacer(),
-          Text(
-            "Programming Community of\nNIT Durgapur",
-            style: TextStyle(
-              color: backgroundLight,
-              fontSize: 24,
-              height: 1.3,
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.only(top: 16),
+                child: Text(
+                  "Programming Community of\nNIT Durgapur",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: backgroundLight,
+                    fontSize: height * 0.022,
+                    height: 1.4,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -205,10 +242,9 @@ class _HomepageState extends State<Homepage> {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 24,
+          fontSize: height * 0.03,
           fontWeight: FontWeight.bold,
           color: textDark,
-          letterSpacing: 0.5,
         ),
       ),
     );
@@ -250,20 +286,25 @@ class _HomepageState extends State<Homepage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  imgData[index],
-                  width: 56,
-                  height: 56,
-                ),
-                SizedBox(height: 12),
-                Text(
-                  titles[index],
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: textDark,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Image.asset(
+                    imgData[index],
+                    width: height * 0.1,
+                    height: width * 0.2,
                   ),
-                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: height * 0.01),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    titles[index],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: textDark,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recursion/Infrastructure/data_sources/Auth/signin_api.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/register.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
@@ -14,8 +13,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final SigninApi _signinApi =
-      SigninApi(baseurl: 'https://recnitdgp.pythonanywhere.com/api/token/');
+  final SigninApi _signinApi = SigninApi();
 
   Future<void> _signin() async {
     final String username = _usernameController.text;
@@ -24,17 +22,22 @@ class _SignInPageState extends State<SignInPage> {
     try {
       bool success = await _signinApi.signin(username, password);
       if (success) {
-        // Save login status to shared preferences
+        // Save the login status
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isLoggedIn', true);
+        await prefs.setBool('isLoggedIn', true); // Set login status to true
 
+        // Navigate to HomePage
         Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (context) => HomePage()));
+          context,
+          CupertinoPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Failed to login',
+              'Failed to sign in',
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -44,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            error is ApiError ? error.message : 'Failed to login',
+            error is ApiError ? error.message : 'Failed to sign in',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -234,7 +237,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 child: TextButton(
                   style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.resolveWith(
+                    overlayColor: WidgetStateProperty.resolveWith(
                       (states) => Colors.black12,
                     ),
                   ),

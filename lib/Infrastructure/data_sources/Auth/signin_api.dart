@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiError {
   final String message;
@@ -15,13 +15,15 @@ class ApiError {
 
 class SigninApi {
   final String baseurl;
-  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-  SigninApi({required this.baseurl});
+  SigninApi({
+    this.baseurl = 'https://recnitdgp.pythonanywhere.com/api/token/',
+  });
 
   Future<void> _saveTokens(String accessToken, String refreshToken) async {
-    await secureStorage.write(key: 'accessToken', value: accessToken);
-    await secureStorage.write(key: 'refreshToken', value: refreshToken);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accessToken', accessToken);
+    await prefs.setString('refreshToken', refreshToken);
   }
 
   Future<bool> signin(String username, String password) async {
@@ -44,6 +46,9 @@ class SigninApi {
         final accessToken = responseBody['access'];
         final refreshToken = responseBody['refresh'];
         await _saveTokens(accessToken, refreshToken);
+        print('Access Token: $accessToken');
+        print('Refresh Token: $refreshToken');
+        print('Tokens saved successfully');
         return true;
       } else {
         final responseBody = jsonDecode(response.body);
@@ -60,7 +65,8 @@ class SigninApi {
 
   Future<Map<String, dynamic>> refreshToken(String refreshToken) async {
     final response = await http.post(
-      Uri.parse('https://api.recursionnitd.in/api/token/refresh/'),
+      //https://api.recursionnitd.in/api/token/refresh/
+      Uri.parse('https://recnitdgp.pythonanywhere.com/api/token/refresh/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $refreshToken',
@@ -72,7 +78,8 @@ class SigninApi {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      await _saveTokens(data['access'], refreshToken); // Save refreshed access token
+      await _saveTokens(
+          data['access'], refreshToken); // Save refreshed access token
       return data;
     } else {
       throw Exception('Failed to refresh token');
@@ -80,7 +87,8 @@ class SigninApi {
   }
 
   Future<void> logout() async {
-    await secureStorage.delete(key: 'accessToken');
-    await secureStorage.delete(key: 'refreshToken');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('accessToken');
+    await prefs.remove('refreshToken');
   }
 }

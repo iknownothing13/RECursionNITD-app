@@ -4,6 +4,7 @@ import 'package:recursion/Application/api_interaction/event_api_use_case.dart';
 import 'package:recursion/Application/api_interaction/team_api_use_case.dart';
 import 'package:recursion/Presentation/Routes/app_routes.dart';
 import 'package:recursion/Presentation/Screens/EventsPage/events_page.dart';
+import 'package:recursion/Presentation/Screens/LoginPage/login.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/welcome.dart';
 import 'package:recursion/Presentation/Screens/NavBarPage/navbar_page.dart';
 import '../Screens/ErrorPage/error_page.dart';

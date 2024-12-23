@@ -22,19 +22,19 @@ class _MyAppState extends State<MyApp> {
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    print(isLoggedIn);
 
     setState(() {
-      initialRoute = isLoggedIn
-          ? AppRoutes.home
-          : AppRoutes.login; // Set initial route based on login status
+      initialRoute = isLoggedIn ? AppRoutes.home : AppRoutes.login;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: initialRoute,
-        onGenerateRoute: AppRouter.onGenerateRoute);
+      debugShowCheckedModeBanner: false,
+      initialRoute: initialRoute,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+    );
   }
 }

@@ -15,6 +15,13 @@ class _WelcomePageState extends State<WelcomePage> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
+    // Calculate responsive font sizes
+    final headingFontSize =
+        width * 0.06; // Increased from 0.05 for better visibility
+    final bodyFontSize =
+        width * 0.035; // Increased from 0.03 for better readability
+    final buttonFontSize = width * 0.04; // Kept the same as it works well
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -36,25 +43,31 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     ),
                     SizedBox(height: height * 0.05),
-                    Text(
-                      "Enterprise team\ncollaboration.",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: width * 0.05,
-                        fontWeight: FontWeight.bold,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Enterprise team\ncollaboration.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: headingFontSize,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: height * 0.02),
                     Container(
                       width: width * 0.8,
-                      child: Text(
-                        "Bring together your files, your tools, project and people. Including a new mobile and desktop application.",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: width * 0.03,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Bring together your files, your tools, project and people. Including a new mobile and desktop application.",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: bodyFontSize,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     )
                   ],
@@ -70,8 +83,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   children: [
                     Expanded(
                       child: Container(
-                        height: height *
-                            0.08, // Adjust button height based on screen height
+                        height: height * 0.08,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18),
@@ -90,13 +102,15 @@ class _WelcomePageState extends State<WelcomePage> {
                               ),
                             );
                           },
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: width *
-                                  0.04, // Adjust font size based on width
-                              fontWeight: FontWeight.bold,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: buttonFontSize,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -124,12 +138,15 @@ class _WelcomePageState extends State<WelcomePage> {
                               ),
                             );
                           },
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: width * 0.04,
-                              fontWeight: FontWeight.bold,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: buttonFontSize,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

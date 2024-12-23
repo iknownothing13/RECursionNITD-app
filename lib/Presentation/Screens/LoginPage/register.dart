@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:recursion/Infrastructure/data_sources/signup_api.dart';
+import 'package:recursion/Infrastructure/data_sources/Auth/signup_api.dart';
 import 'package:recursion/Presentation/Screens/LoginPage/login.dart';
 
 class RegisterPage extends StatefulWidget {
